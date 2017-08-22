@@ -7,23 +7,23 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 
-//DB functions
-db.getEmployees(1, function(rows) {
+//USER STORY 1
+/*db.getEmployees(function(rows) {
 	employees = rows;
-});
+});*/
 
-db.getEmployeeDepartments(function(rows) {
-	employeeDepartments = rows;
+//Get All Employees
+app.get('/employees', function (req,res) {
+    console.log('In Get Employees');
+	db.getEmployees(function(rows) {
+        res.send(rows)
+    });
+	// body...
 });
-
-db.getDepartment(function(rows) {
-	departments = rows;
-});
-
-//APP functions
 
 //Insert New Employee
 app.post('/employee', function(req, res){
+    console.log('In Inserting new Employee');
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const address = req.body.address;
@@ -43,17 +43,24 @@ app.post('/employee', function(req, res){
     }
 });
 
+//USER STORY 2
+db.getEmployeeDepartments(function(rows) {
+	employeeDepartments = rows;
+});
 
-//Get All Employees
-app.get('/employees', function (req,res) {
-	res.send(employees);
-	// body...
+db.getDepartment(function(rows) {
+	departments = rows;
 });
 
 //Get Employee departments
-app.get('/employeeDepartment', function (req,res) {
-	res.send(employeeDepartments);
-	// body...
+app.post('/employeeDepartment', function (req,res) {
+	console.log('Entered');
+	const id = parseInt(req.body.id);
+	console.log('Id is ' + id);
+	db.getEmployeeDepartmentById(id, function(rows) {
+		res.send(rows);
+        console.log('Request processed: ');
+	});
 });
 
 //Get Departments
@@ -61,6 +68,42 @@ app.get('/department', function (req,res) {
 	res.send(departments);
 	// body...
 });
+
+//Insert New Sales Employee - USER STORY 3
+app.post('/salesemployee', function(req, res){
+    const id = parseInt(req.body.id);
+    const commission = parseFloat(req.body.commission);
+    const total_sales = parseInt(req.body.total_sales);
+
+    if(id && commission && total_sales){
+        db.insertEmployee(id, commission, total_sales, function(message){
+            res.send(message);
+        });
+    }
+});
+
+//USER STORY 4
+db.getEmployeesNetPay(function(rows) {
+	employeesnet = rows;
+});
+
+//Get All Employees net pay - USER STORY 4
+app.get('/employeesnet', function (req,res) {
+	res.send(employeesnet);
+	// body...
+});
+
+//USER STORY 5
+db.getTopSalesEmployee(function(rows) {
+	topsalesemployee = rows;
+});
+
+//Get top sales employee - USER STORY 5
+app.get('/topsalesemployee', function (req,res) {
+	res.send(topsalesemployee);
+	// body...
+});
+//APP functions
 
 app.listen(8002, function () {
 	// body...
