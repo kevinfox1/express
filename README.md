@@ -8,9 +8,7 @@ git clone https://github.com/kevinfox1/express.git
 ```
 
 ### Prerequisites
-You must have:
-Express.JS
-MySQL
+You must have: Express.JS and MySQL
 
 ### Authors
 	•	Kevin Fox
